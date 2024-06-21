@@ -1,5 +1,6 @@
 using cw10.Data;
 using cw10.Services;
+using cw11.Middlewares;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,8 +23,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseHttpsRedirection();
-
 app.MapControllers();
 
 app.Run();
