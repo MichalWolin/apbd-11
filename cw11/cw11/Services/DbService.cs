@@ -1,6 +1,8 @@
 ﻿using cw10.Data;
 using cw10.DTOs;
 using cw10.Models;
+using cw11.Helpers;
+using cw11.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace cw10.Services;
@@ -121,14 +123,45 @@ public class DbService : IDbService
         return result;
     }
 
-    public async Task AddNewUser(string login, string password)
+    public async Task AddNewUser(RegisterRequest model)
     {
-        await _context.Users.AddAsync(new User
+        var hashedPasswordAndSalt = SecurityHelpers.GetHashedPasswordAndSalt(model.Password);
+
+        var user = new User()
         {
-            Login = login,
-            Password = password
-        });
+            Email = model.Email,
+            Login = model.Login,
+            Password = hashedPasswordAndSalt.Item1,
+            Salt = hashedPasswordAndSalt.Item2,
+            RefreshToken = SecurityHelpers.GenerateRefreshToken(),
+            RefreshTokenExp = DateTime.Now.AddDays(1)
+        };
+
+        await _context.Users.AddAsync(user);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<User> GetUser(string login)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Login.Equals(login));
+
+        return user;
+    }
+
+    public async Task RefreshToken(string login)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Login.Equals(login));
+
+        user.RefreshToken = SecurityHelpers.GenerateRefreshToken();
+        user.RefreshTokenExp = DateTime.Now.AddDays(1);
 
         await _context.SaveChangesAsync();
+    }
+
+    public async Task<User> GetUser(RefreshTokenRequest refreshToken)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.RefreshToken.Equals(refreshToken.RefreshToken));
+
+        return user;
     }
 }

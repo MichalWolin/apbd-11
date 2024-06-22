@@ -114,15 +114,5 @@ public class DatabaseContext : DbContext
                 Details = "Once a day"
             }
         });
-
-        modelBuilder.Entity<User>().HasData(new List<User>
-        {
-            new User
-            {
-                IdUser = 1,
-                Login = "admin",
-                Password = "admin"
-            }
-        });
     }
 }
