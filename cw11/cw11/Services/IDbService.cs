@@ -10,4 +10,6 @@ public interface IDbService
     Task<int> AddNewPrescription(DateTime date, DateTime dueDate, int idPatient, int idDoctor);
     Task AddNewPrescriptionMedicament(int idMedicament, int idPrescription, int dose, string details);
     Task<PatientInfoDto> GetPatientInfo(int id);
+    Task<bool> DoesUserExist(string login);
+    Task AddNewUser(string login, string password);
 }

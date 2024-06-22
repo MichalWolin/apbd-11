@@ -1,4 +1,5 @@
-﻿using cw10.Models;
+﻿using cw10.DTOs;
+using cw10.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace cw10.Data;
@@ -18,6 +19,7 @@ public class DatabaseContext : DbContext
     public DbSet<Patient> Patients { get; set; }
     public DbSet<Prescription> Prescriptions { get; set; }
     public DbSet<PrescriptionMedicament> PrescriptionMedicaments { get; set; }
+    public DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -110,6 +112,16 @@ public class DatabaseContext : DbContext
                 IdMedicament = 2,
                 Dose = 1,
                 Details = "Once a day"
+            }
+        });
+
+        modelBuilder.Entity<User>().HasData(new List<User>
+        {
+            new User
+            {
+                IdUser = 1,
+                Login = "admin",
+                Password = "admin"
             }
         });
     }

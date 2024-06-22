@@ -113,4 +113,22 @@ public class DbService : IDbService
 
         return patientInfoDto;
     }
+
+    public async Task<bool> DoesUserExist(string login)
+    {
+        var result = await _context.Users.AnyAsync(u => u.Login.Equals(login));
+
+        return result;
+    }
+
+    public async Task AddNewUser(string login, string password)
+    {
+        await _context.Users.AddAsync(new User
+        {
+            Login = login,
+            Password = password
+        });
+
+        await _context.SaveChangesAsync();
+    }
 }

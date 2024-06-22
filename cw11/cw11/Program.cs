@@ -23,7 +23,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseMiddleware<ErrorHandlingMiddleware>();
+// app.UseMiddleware<ErrorHandlingMiddleware>();
+app.UseMiddleware<BasicAuthMiddleware>();
 app.UseHttpsRedirection();
 app.MapControllers();
 
